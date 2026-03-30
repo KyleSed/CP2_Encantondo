@@ -10,11 +10,12 @@ screen_width = 100
 #Player Setup
 class player:
     def __init__(self):
-        self.player_name = ""
+        self.player_name = ''
         self.player_health = 100
         self.player_stamina = 100
         self.player_status_effects = []
         self.player_inventory = []
+        self.location = "Home"
 playerko = player()
 
 #Tittle Screen
@@ -26,7 +27,7 @@ def title_screen_options():
         help_menu()
     elif option.lower() == ("quit"):
         sys.exit()
-    while option.lower() not in ["play", "help", "quit"]:
+    while option.lower() not in ['play', 'help', 'quit']:
         print("Invalid command. Please try again.")
         option = input("> ")
         if option.lower() == ("play"):
@@ -56,7 +57,277 @@ def help_menu():
     print("~To quit the game, type 'quit' at the tittle screen.~\n")
     print("~Follow the prompts and type your commands to progress through the game.~\n")
     print("~Type 'taas', 'baba', 'kaliwa', or 'kanan' to move around.~\n")
-    print("~Type 'gamitin ko mata ko' to inspect.~\n")
+    print("~Type 'gamitin ko mata ko' to examine.~\n")
     print("~Enjoy your adventure in Encatondo!~\n")
     print('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
     title_screen_options()
+    
+#Game Functions
+def start_game():
+
+#Map (Nasa whole pad yung map, hirap i-type rito.)
+    Zonename = ''
+    Descriptions = 'descriptions' 
+    Examinations = 'gamitin ko mata ko'
+    Solved = False
+    UP = 'taas', 'north', 'up'
+    DOWN = 'baba', 'south', 'down'
+    LEFT = 'kaliwa', 'west', 'left'
+    RIGHT = 'kanan', 'east', 'right'
+    solved_places = {'a1': False, 'a2': False, 'a3': False, 'a4': False, 'a5': False,
+                     'b1': False, 'b2': False, 'b3': False, 'b4': False, 'b5': False,
+                     'c1': False, 'c2': False, 'c3': False, 'c4': False, 'c5': False,
+                     'd1': False, 'd2': False, 'd3': False, 'd4': False, 'd5': False,
+                     'e1': False, 'e2': False, 'e3': False, 'e4': False, 'e5': False}
+    zonemap = {
+        'a1': {
+            Zonename: 'Construction Supply Store',
+            Descriptions: 'A place where you can buy construction materials and tools.',
+            Examinations: 'May nakita kag rugby sa shelves.',
+            Solved: False,
+            UP: '', 
+            DOWN: 'b1', 
+            LEFT: '', 
+            RIGHT: 'a2', 
+        },
+        'a2': {
+            Zonename: 'Tattoo Parlor',
+            Descriptions: 'A place where you can get tattoos done.',
+            Examinations: 'May nakita kang nagru-rugby sa gilid ng parlor.',
+            Solved: False,
+            UP: '', 
+            DOWN: 'b2', 
+            LEFT: 'a1', 
+            RIGHT: 'a3', 
+        },
+        'a3': {
+            Zonename: 'Bahay ni Tita',
+            Descriptions: 'Bahay ng tita mo na may maliit na farm sa gilid.',
+            Examinations: 'Sinisenyasan ka ng tita mo na lumapit ka sa kanya. Uutusan ka yata.',
+            Solved: False,
+            UP: '', 
+            DOWN: 'b3', 
+            LEFT: 'a2', 
+            RIGHT: 'a4', 
+        },
+        'a4': {
+            Zonename: 'Church',
+            Descriptions: 'A place of worship where you can pray and reflect.',
+            Examinations: 'May nakita kang mga krus sa altar.',
+            Solved: False,
+            UP: '', 
+            DOWN: 'b4', 
+            LEFT: 'a3', 
+            RIGHT: 'a5', 
+        },
+        'a5': {
+            Zonename: 'Encantondo Hill',
+            Descriptions: 'A scenic hill with a beautiful view of the town (tambak ng buhangin at bato).',
+            Examinations: 'Madulas ang daan papunta sa tuktok ng burol. Sarap paring puntahan ng tuktok',
+            Solved: False,
+            UP: '', 
+            DOWN: 'b5', 
+            LEFT: 'a4', 
+            RIGHT: '', 
+        },
+        'b1': {
+            Zonename: 'Motorcycle Dealership',
+            Descriptions: 'A place where you can buy and repair motorcycles.',
+            Examinations: 'May nakita kang mga motor na naka-stored sa loob ng tindahan.',
+            Solved: False,
+            UP: 'a1', 
+            DOWN: 'c1', 
+            LEFT: '', 
+            RIGHT: 'b2', 
+        },
+        'b2': {
+            Zonename: 'Encantondo Daycare Center',
+            Descriptions: 'A place where children are cared for during the day.',
+            Examinations: 'May nakita kang mga teacher na nagtuturo sa loob ng daycare center.',
+            Solved: False,
+            UP: 'a2', 
+            DOWN: 'c2', 
+            LEFT: 'b1', 
+            RIGHT: 'b3', 
+        },
+        'b3': {
+            Zonename: 'Encantondo Covered Court',
+            Descriptions: 'A covered court where people can gather and play.',
+            Examinations: 'May nakita kang mga tao na masasama ang tingin sa iyo sa labas ng court',
+            Solved: False,
+            UP: 'a3', 
+            DOWN: 'c3', 
+            LEFT: 'b2', 
+            RIGHT: 'b4', 
+        },
+        'b4': {
+            Zonename: 'BDO',
+            Descriptions: 'A bank where you can deposit and withdraw money.',
+            Examinations: 'May nakita kang mga tao na naglalakad sa labas ng BDO. May hawak ng wallet ang isa sa kanila.',
+            Solved: False,
+            UP: 'a4', 
+            DOWN: 'c4', 
+            LEFT: 'b3', 
+            RIGHT: 'b5', 
+        },
+        'b5': {
+            Zonename: 'Dali Store',
+            Descriptions: 'A small store where you can buy snacks and drinks.',
+            Examinations: 'May nakita kang freezer sa loob ng tindahan. Mukhang may yelo silang tinda.',
+            Solved: False,
+            UP: 'a5', 
+            DOWN: 'c5', 
+            LEFT: 'b4', 
+            RIGHT: '', 
+        },
+        'c1': {
+            Zonename: 'Naka-park na E-Bike sa Daan',
+            Descriptions: 'Kapal, buong bike nakaparking sa kalahati ng kalsada.',
+            Examinations: 'Sayang, wala kang nakitang tow truck.',
+            Solved: False,
+            UP: 'b1', 
+            DOWN: 'd1', 
+            LEFT: '', 
+            RIGHT: 'c2', 
+        },
+        'c2': {
+            Zonename: 'Encantondo Plaza',
+            Descriptions: 'A bustling plaza where people gather and socialize.',
+            Examinations: 'May nakita kang mga stall sa paligid ng plaza. Mukhang may mga pagkain at inumin na binebenta roon.',
+            Solved: False,
+            UP: 'b2', 
+            DOWN: 'd2', 
+            LEFT: 'c1', 
+            RIGHT: 'c3', 
+        },
+        'c3': {
+            Zonename: 'Encontondo University',
+            Descriptions: 'A prestigious university where students come to learn and grow.',
+            Examinations: 'Nakita mo ang leader mo sa final project na sinisenyasan ka. Mukhang may sasanihin yata sa iyo.',
+            Solved: False,
+            UP: 'b3', 
+            DOWN: 'd3', 
+            LEFT: 'c2', 
+            RIGHT: 'c4', 
+        },
+        'c4': {
+            Zonename: 'Encantondo Police Station',
+            Descriptions: 'A police station where law enforcement officers are stationed.',
+            Examinations: 'Minumukhaan ka nila. Mukhang may nagawa kang mali.',
+            Solved: False,
+            UP: 'b4', 
+            DOWN: 'd4', 
+            LEFT: 'c3', 
+            RIGHT: 'c5', 
+        },
+        'c5': {
+            Zonename: 'Mr. Donuts',
+            Descriptions: 'A small donut shop where you can buy fresh donuts.',
+            Examinations: 'May nakita kang butternut, favourite flavour ni crush.',
+            Solved: False,
+            UP: 'b5', 
+            DOWN: 'd5', 
+            LEFT: 'c4', 
+            RIGHT: '', 
+        },
+        'd1': {
+            Zonename: 'Bigbrew Coffee Shop',
+            Descriptions: 'A cozy coffee shop where you can enjoy a good cup of coffee.',
+            Examinations: 'Problemado ang bantay sa coffee shop, mukhang kinukulang sila ng sangkap',
+            Solved: False,
+            UP: 'c1', 
+            DOWN: 'e1', 
+            LEFT: '', 
+            RIGHT: 'd2', 
+        },
+        'd2': {
+            Zonename: 'Novo',
+            Descriptions: 'A small market where you can buy various items.',
+            Examinations: 'Masama ang tingin sa iyo nung isang lalaki sa tapat ng store.',
+            Solved: False,
+            UP: 'c2', 
+            DOWN: 'e2', 
+            LEFT: 'd1', 
+            RIGHT: 'd3', 
+        },
+        'd3': {
+            Zonename: 'Encantondo Doctors',
+            Descriptions: 'A medical clinic where you can receive healthcare services.',
+            Examinations: 'Amoy alcohol sa tapat ng hospital.',
+            Solved: False,
+            UP: 'c3', 
+            DOWN: 'e3', 
+            LEFT: 'd2', 
+            RIGHT: 'd4', 
+        },
+        'd4': {
+            Zonename: 'Pandayan Bookstore',
+            Descriptions: 'A bookstore where you can buy various books.',
+            Examinations: 'May nakita kang bond paper sa loob ng bookstore.',
+            Solved: False,
+            UP: 'c4', 
+            DOWN: 'e4', 
+            LEFT: 'd3', 
+            RIGHT: 'd5', 
+        },
+        'd5': {
+            Zonename: 'Bakal Gym',
+            Descriptions: 'A place where you can exercise and stay fit.',
+            Examinations: 'Pamilyar sa iyo ang bantay ng gym.',
+            Solved: False,
+            UP: 'c5', 
+            DOWN: 'e5', 
+            LEFT: 'd4', 
+            RIGHT: '', 
+        },
+        'e1': {
+            Zonename: 'Encantondo Seaside',
+            Descriptions: 'A beautiful seaside where you can relax and enjoy the view (kanal na punong-puno ng basura).',
+            Examinations: 'Mukhang mabaho. May kademonyohan kang nasa isip.',
+            Solved: False,
+            UP: 'd1', 
+            DOWN: '', 
+            LEFT: '', 
+            RIGHT: 'e2', 
+        },
+        'e2': {
+            Zonename: 'Bahay na Violet',
+            Descriptions: 'A cozy house and bahay ni crush.',
+            Examinations: 'Nakita mo si crush sa biranda ng bahay nila. Mukhang may ginagawa siya sa cellphone niya.',
+            Solved: False,
+            UP: 'd2', 
+            DOWN: '', 
+            LEFT: 'e1', 
+            RIGHT: 'e3', 
+        },
+        'e3': {
+            Zonename: 'Bahay na Green',
+            Descriptions: 'A cozy house and bahay ng tropa mo.',
+            Examinations: 'Nakita mo tropa mo kasama ang ckix niya. Mukhang may ibubulong yata sa iyo ang tropa mo.',
+            Solved: False,
+            UP: 'd3', 
+            DOWN: '', 
+            LEFT: 'e2', 
+            RIGHT: 'e4', 
+        },
+        'e4': {
+            Zonename: 'Home',
+            Descriptions: 'Your humble abode where you can rest and recover.',
+            Examinations: 'May sinasabi ang nanay mo, uutusan ka yata sa bahay.',
+            Solved: False,
+            UP: 'd4', 
+            DOWN: '', 
+            LEFT: 'e3', 
+            RIGHT: 'e5', 
+        },
+        'e5': {
+            Zonename: 'Encantondo Town Hall',
+            Descriptions: 'The local government building where you can handle various administrative tasks.',
+            Examinations: 'Masama ang tingin sa iyo nung isang tanod, mukhang may nagawa kang mali.',
+            Solved: False,
+            UP: 'd5', 
+            DOWN: '', 
+            LEFT: 'e4', 
+            RIGHT: '', 
+        }
+    }
