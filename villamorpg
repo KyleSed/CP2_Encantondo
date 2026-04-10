@@ -1,12 +1,13 @@
 #RPG (Realistic Pinoy Game)
 import sys
 import os
+from time import time
 
 screen_width = 100
 
 #VALID_INPUTS
-valid_moves = ['walk', 'lakad', 'takbo', 'run'] 
-valid_options = ['play', 'help', 'quit']
+valid_moves = ['walk', 'lakad', 'takbo', 'run', 'hakbang', 'hop', 'jump', 'sprint', 'go', 'move'] 
+valid_options = ['new game', 'load game', 'help', 'quit']
 valid_help_options = ['change name', 'how to play', 'return']
 valid_up = ['north', 'hilaga', 'up', 'norte', 'go north', 'go up', 'forward'] 
 valid_down = ['south', 'timog', 'down', 'sur', 'go south', 'go down', 'backward'] 
@@ -252,6 +253,26 @@ zonemap = {
     }
 
 
+#Player Stats
+hp = 100
+stamina = 100
+strength = 10
+money = 0
+inventory = []
+
+def save_game():
+    try:
+        with open("C:\\Users\\Administrator\\Desktop\\savefile.txt", "w") as file:
+            file.write(playerko.name + "\n")
+            file.write(playerko.location + "\n")
+            file.write(str(hp) + "\n")
+            file.write(str(stamina) + "\n")
+            file.write(str(strength) + "\n")
+            file.write(str(money) + "\n")
+            file.write(','.join(inventory))
+    except:
+        print("                  ~~Error saving game.~~")
+
 #PLAYER
 class Player:
     def __init__(player):
@@ -261,79 +282,153 @@ class Player:
 playerko = Player()
 
 #UI
+def border():
+    print('===============================================================================')
+
 def title_screen_options():
-    option = input("> ")
-    if option.lower() == ("play"):
-        start_game()
-    elif option.lower() == ("help"):
-        help_menu()
-    elif option.lower() == ("quit"):
-        sys.exit()
-    while option.lower() not in valid_options:
-        print("Invalid command. Please try again.")
-        option = input("> ")
-        if option.lower() == ("play"):
+    while True:
+        option = input("> ").lower()
+
+        if option == "new game":
+            ask_name()
             start_game()
-        elif option.lower() == ("help"):
+            break
+        elif option == "load game":
+            load_game()
+            break
+        elif option == "help":
             help_menu()
-        elif option.lower() == ("quit"):
+            break
+        elif option == "quit":
             sys.exit()
+        else:
+            print("Invalid command. Please try again.")
+
+def ask_name():
+    os.system('cls')
+    border()
+    print("                  ~~Sup, what should I call you homie?~~")
+    border()
+
+    playerko.name = input("> ")
+    playerko.location = 'e4' 
+    save_game()
+    border()
+    print(f"                  ~~Eyyo what's trippin', {playerko.name}!~~")
+    border()
+
+def load_game():
+    global hp, stamina, strength, money, inventory
+
+    try:
+        file = open("C:\\Users\\Administrator\\Desktop\\savefile.txt", "r")
+        lines = file.readlines()
+        file.close()
+
+        # Check if file is complete
+        if len(lines) < 6:
+            raise Exception("Corrupted save file")
+
+        playerko.name = lines[0].strip()
+        playerko.location = lines[1].strip()
+
+        # Fix empty location
+        if playerko.location not in zonemap:
+            playerko.location = 'e4'
+
+        hp = int(lines[2].strip() or 100)
+        stamina = int(lines[3].strip() or 100)
+        strength = int(lines[4].strip() or 10)
+        money = int(lines[5].strip() or 0)
+
+        inventory = lines[6].strip().split(',') if len(lines) > 6 else []
+
+        border()
+        print(f"                  ~~Sup {playerko.name}! Welcome back!~~")
+        border()
+
+    except:
+        print("                  ~~Save file corrupted. Starting new game.~~")
+        ask_name()
+        return
+
+    start_game()
+
+def change_name():
+    os.system('cls')
+    border()
+    print("                  ~~What do you want your new name to be?~~")
+    border()
+
+    new_name = input("> ").strip()
+    if new_name == "":
+        print("                  ~~No name amputek. Feeling unique yarn?~~")
+        return
+    playerko.name = new_name
+    save_game()
+
+    border()
+    print(f"                  ~~Name changed to {playerko.name}!~~")
+    border()
 
 def how_to_play():
     os.system('cls')
-    print('===============================================================================')
-    print("                             ~~How to Play~~        \n")
-    print("1. Use the commands 'walk', 'lakad', 'takbo' or 'run' to move around the map.")
-    print("2. Use the command 'gamitin ko mata ko' to look around your current location for clues and items.")
-    print("3. Use commands to interact with the environment and characters, some common commands are 'yap', 'fight' and 'use'.")
-    print("4. Your goal is to explore the town and discover different commands that you could use on your journey.")
+    border()
+    print("                                                ~~How to Play~~        \n")
+    print("1. Use the commands 'walk, takbo, go' followed by a direction to move around the map.")
+    print("2. Use the command 'save game', 'help menu' or 'main menu' to access the respective menus at any time during the game.")
+    print("3. Use the command 'gamitin ko mata ko' to look around your current location for clues and items.")
+    print("4. Use commands to interact with the environment and characters, some common commands are 'yap', 'fight' and 'use'.")
+    print("5. Your goal is to explore the town and discover different commands that you could use on your journey.")
     print("\nType 'return' to go back to the help menu.")
-    print('===============================================================================')
+    border()
     choice = input("> ")
     if choice.lower() == ("return"):
         help_menu()
 
 def help_menu_options():
-    choice = input("> ")
-    if choice.lower() == ("how to play"):
-        how_to_play()
-    elif choice.lower() == ("return"):
-        title_screen()
-    while choice.lower() not in valid_help_options:
-        print("Invalid command. Please try again.")
-        choice = input("> ")
-    if choice.lower() == ("how to play"):
-        how_to_play()
-    elif choice.lower() == ("return"):
-        title_screen()
+    while True:
+        choice = input("> ").lower()
+
+        if choice == "how to play":
+            how_to_play()
+            break
+        elif choice == "change name":
+            change_name()
+            break
+        elif choice == "return":
+            title_screen()
+            break
+        else:
+            print("Invalid command. Please try again.")
 
 def title_screen():
     os.system('cls')
-    print('===============================================================================')
-    print("            ~~Welcome to Realistic Pinoy Game (RPG)~~        \n")
+    border()
+    print("            ~~welcome to REALISTIC PINOY GAME (RPG)~~        \n")
     print(" ~Gagawin ang lahat ng bagay maliban sa pagsunod sa utos sa'yo ng nanay mo~\n")
-    print("                            | PLAY |\n")
-    print("                            | HELP |\n")
-    print("                            | QUIT |\n")
+    print("                            | NEW GAME  |\n")
+    print("                            | LOAD GAME |\n")
+    print("                            |   HELP    |\n")
+    print("                            |   QUIT    |\n")
     print("Copyright 2026 by Villamor. All rights reserved.")
-    print('===============================================================================')
+    border()
     title_screen_options()
 
 def help_menu():
     os.system('cls')
-    print('===============================================================================')
+    border()
     print("                             ~~Help Menu~~        \n")
     print("                            | Change Name |\n")
     print("                            | How to Play |\n")
     print("                            |   Return    |\n")
     print("Copyright 2026 by Kyle Zedrick A. Villamor. All rights reserved.")
-    print('===============================================================================')
+    border()
     help_menu_options()
 
 
 #GAME_LOOP
 def start_game():
-    os.system('cls')
     while not playerko.game_over:
         print_location()
         prompt()
@@ -348,27 +443,40 @@ def print_location():
 
 #PLAYER_PROMPT
 def prompt():
-    print('')
-    print("       ~~What do you want to do?~~")
-    print('')
-    action = input("> ").lower()
-    if action in valid_moves:
-        player_move(action)
+    border()
+    print("                  ~~What do you want to do?~~")
+    border()
+    action = input("> ").lower().strip()
+    words = action.split()
+    if len(words) == 0:
+        return
+    if words[0] in valid_moves:
+        if len(words) > 1:
+            player_move(words[1])   
+        else:
+            player_move(None)
     elif action == 'gamitin ko mata ko':
         player_examine()
+    elif action == 'save game':
+        save_game() 
+    elif action == 'help menu':
+        help_menu()
+    elif action == 'main menu':
+        title_screen()
     elif action == 'quit':
         sys.exit()
     else:
-        print('')
-        print("       ~~Invalid command. Please try again.~~")
-        print('')
+        border()
+        print("                  ~~Invalid command. Please try again.~~")
+        border()
 
 #PLAYER_MOVE
-def player_move(action):
-    print('')
-    print("       ~~Where do you want to go?~~")
-    print('')
-    direction = input('> ').lower()
+def player_move(direction):
+    if direction is None:
+        border()
+        print("                  ~~Where do you want to go?~~")
+        border()
+        direction = input('> ').lower().strip()
     if direction in valid_up:
         destination = zonemap[playerko.location][NORTH]
     elif direction in valid_down:
@@ -378,31 +486,30 @@ def player_move(action):
     elif direction in valid_right:
         destination = zonemap[playerko.location][EAST]
     else:
-        print('')
-        print("       ~~Wrong spelling ka siguro. Please try again.~~")
-        print('')
+        border()
+        print("                  ~~Wrong spelling ka siguro. Pakiulit.~~")
+        border()
         return
-
     if destination == '':
-        print('')
-        print("       ~~Dead End ka sah. Please wag mo nang gawin ulit.~~")
-        print('')
+        border()
+        print("                  ~~Dead End ka sah. Hanap kang ibang daan.~~")
+        border()
     else:
         movement_handler(destination)
 
 #MOVE_HANDLER
 def movement_handler(destination):
     playerko.location = destination
-    print('')
-    print("       ~~You moved to", zonemap[destination][ZONENAME],"~~")
-    print('')
+    border()
+    print("                  ~~You moved to", zonemap[destination][ZONENAME],"~~")
+    border()
 
 #EXAMINE
 def player_examine():
     loc = playerko.location
-    print('')
-    print("       ~~Nakita mo na", zonemap[loc][EXAM],"~~")
-    print('')
+    border()
+    print("~~Nakita mo na", zonemap[loc][EXAM],"~~")
+    border()
 
 #GAME_START
 title_screen()
