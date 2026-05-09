@@ -730,6 +730,6 @@ def nanay_utos_ending():
 
 #GAME_START
 title_screen()
-testing = true
-changes na gagawin sa game loop:
-- add more npc interactions - add more items to buy and more shops to buy them from - add more commands to use in the game (e.g. 'use [item]', 'check inventory', 'talk to [npc]', etc.) - add more locations to explore and more things to examine in each location - add more endings based on different choices and interactions in the game - add a combat system for encounters with enemies - add a leveling system for the player to improve their stats and abilities - add a quest system for the player to complete tasks and earn rewards - add a day/night cycle                    
+#testing = true
+#changes na gagawin sa game loop:
+#- add more npc interactions - add more items to buy and more shops to buy them from - add more commands to use in the game (e.g. 'use [item]', 'check inventory', 'talk to [npc]', etc.) - add more locations to explore and more things to examine in each location - add more endings based on different choices and interactions in the game - add a combat system for encounters with enemies - add a leveling system for the player to improve their stats and abilities - add a quest system for the player to complete tasks and earn rewards - add a day/night cycle                    
