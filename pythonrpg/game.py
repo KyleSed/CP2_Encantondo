@@ -9,6 +9,8 @@ from map import TileKind, Map
 from camera import create_screen
 from quest import QuestManager
 from pathlib import Path
+import menu
+import button
 pygame.init()
 
 # setup
