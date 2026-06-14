@@ -1,16 +1,11 @@
 # gamewindow
-import os
 import pygame
-os.chdir(os.path.dirname(__file__))
 import input
 from player import Player
 from sprite import sprites, Sprite
 from map import TileKind, Map
 from camera import create_screen
 from quest import QuestManager
-from pathlib import Path
-import menu
-import button
 pygame.init()
 
 # setup
@@ -19,8 +14,6 @@ screen = create_screen(1200, 800, "Encantondo")
 clear_color = pygame.Color(140, 214, 70)
 
 running = True
-BASE_DIR = Path(__file__).resolve().parent
-PLAYER_IMG = BASE_DIR / "images" / "player.png"
 player = Player("images/player.png", 42 * 32, 11 * 32)
 tile_kinds = [
 
